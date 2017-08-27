@@ -10,7 +10,11 @@ QT += \
     widgets \
     winextras
 
-TARGET = XPlay
+contains(QT_ARCH, x86_64) {
+    TARGET = XPlay64
+} else {
+    TARGET = XPlay
+}
 
 TEMPLATE = app
 
