@@ -1,6 +1,14 @@
 ﻿#pragma once
 
 #include <QMenu>
+#include <QWinTaskbarProgress>
+#include <QWinTaskbarButton>
+#include <QWinThumbnailToolBar>
+#include <QWinThumbnailToolButton>
+#include <QWinJumpList>
+#include <QWinJumpListCategory>
+#include <QWinJumpListItem>
+#include <QtWin>
 #include "StandardDialog/StandardDialog.h"
 #include "Control/SProgressBar.h"
 #include "Control/SButton.h"
@@ -26,6 +34,9 @@ private:
     void CreateMainMenu();
     void createShortcuts();
     void autoLoadExternalSubtitleFile(const QString &filePath);
+    void createJumpList();
+    void createTaskbar();
+    void createThumbnailToolBar();
 
 private slots:
     void help();
@@ -71,4 +82,11 @@ private:
     MpvHandler *mpvHandler;
 
     int mCursorTimer;
+
+    QWinTaskbarButton *mpTaskbarButton;
+    QWinTaskbarProgress *mpTaskbarProgress;
+    QWinThumbnailToolBar *mpThumbnailToolBar;
+    QWinThumbnailToolButton *mpPlayToolButton;
+    QWinThumbnailToolButton *mpStopToolButton;
+    QWinThumbnailToolButton *mpMuteToolButton;
 };

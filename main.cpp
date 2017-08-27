@@ -1,11 +1,14 @@
 ﻿#include "PCH.h"
 #include <QApplication>
 #include <QFileInfo>
+#include <QCoreApplication>
+#include <QDir>
 #include <clocale>
 #include "MainWindow.h"
 #include "Style/SStyle.h"
 #include "mpvtypes.h"
 #include "WindowManager.h"
+#include "Common/Common.h"
 
 //重载QApplication，使用其消息分发处理;
 class SApplication : public QApplication
@@ -14,8 +17,10 @@ public:
     SApplication(int &argc, char **argv):QApplication(argc,argv)
     {
         setApplicationName(QString::fromLatin1(AppName));
+        setApplicationDisplayName(QString::fromLatin1(AppDisplayName));
         setApplicationVersion(QString::fromLatin1(AppVersion));
         setOrganizationName(QString::fromLatin1(AppPublisher));
+        setOrganizationDomain(QString::fromLatin1(AppPublisherURL));
         setAttribute(Qt::AA_EnableHighDpiScaling);
         setFont(QFont("Microsoft YaHei"));
         setWindowIcon(QIcon(":/Icon/XPlay.ico"));
@@ -43,6 +48,10 @@ int main(int argc, char *argv[])
     // the LC_NUMERIC category to be set to "C", so change it back.
     std::setlocale(LC_NUMERIC, "C");
 
+    QDir::setCurrent(qApp->applicationDirPath());
+
+    Common::load_qm();
+
     //显示主界面;
     MainWindow window;
     WindowManager::Instance()->SetMainWindow(&window);
@@ -53,8 +62,8 @@ int main(int argc, char *argv[])
         QFileInfo fi(app.arguments().at(1));
         if (fi.exists() && fi.isFile())
         {
-            QString mSuffix = QString("*.") + fi.suffix();
-            if (Mpv::media_filetypes.contains(mSuffix))
+            QMimeDatabase mdb;
+            if (Common::supportedMimeTypes().contains(mdb.mimeTypeForFile(fi).name()))
             {
                 window.play(app.arguments().at(1));
             }

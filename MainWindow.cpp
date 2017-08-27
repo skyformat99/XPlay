@@ -13,7 +13,9 @@
 #include <QShortcut>
 #include <QPalette>
 #include <QFileInfo>
+#include <QtWinExtras>
 #include "util.h"
+#include "Common/Common.h"
 
 static bool isPlaying = false;
 static int thinProgressBar = 5;
@@ -25,6 +27,12 @@ MainWindow::MainWindow(QWidget *parent) : StandardDialog(parent)
   , m_pProgressBar(NULL)
   , m_pMainMenu(NULL)
   , mpvHandler(NULL)
+  , mpTaskbarButton(NULL)
+  , mpTaskbarProgress(NULL)
+  , mpThumbnailToolBar(NULL)
+  , mpPlayToolButton(NULL)
+  , mpStopToolButton(NULL)
+  , mpMuteToolButton(NULL)
 {
     setWindowFlags(windowFlags() | Qt::FramelessWindowHint);
 
@@ -78,6 +86,18 @@ MainWindow::MainWindow(QWidget *parent) : StandardDialog(parent)
     connect(m_pProgressBar, SIGNAL(sliderMoved(qint64)), this, SLOT(seek(qint64)));
     connect(mpvHandler, SIGNAL(videoSizeChanged(int,int)), this, SLOT(changeWindowSizeToVideoSize(int,int)));
 
+    if (QtWin::isCompositionEnabled())
+    {
+        QtWin::enableBlurBehindWindow(this);
+        createJumpList();
+        createTaskbar();
+        createThumbnailToolBar();
+    }
+    else
+    {
+        QtWin::disableBlurBehindWindow(this);
+    }
+
     QTimer::singleShot(50, this, SLOT(forceUpdateWindow()));
 }
 
@@ -93,15 +113,28 @@ MainWindow::~MainWindow()
 void MainWindow::play()
 {
     mpvHandler->Play();
+    if (mpTaskbarButton)
+    {
+        mpTaskbarButton->setOverlayIcon(style()->standardIcon(QStyle::SP_MediaPlay));
+        mpTaskbarProgress->show();
+        mpTaskbarProgress->setValue(m_pProgressBar->value());
+        mpTaskbarProgress->resume();
+    }
+    if (mpThumbnailToolBar)
+    {
+        mpPlayToolButton->setToolTip(tr("Pause"));
+        mpPlayToolButton->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
+    }
 }
 
 void MainWindow::play(const QString &filePath)
 {
-    mpvHandler->PlayFile(mpvHandler->LoadPlaylist(filePath));
+    mpvHandler->LoadFile(filePath);
     if (QFileInfo(filePath).exists() && QFileInfo(filePath).isFile())
     {
         autoLoadExternalSubtitleFile(filePath);
     }
+    play();
     GetHeader()->SetTitleText(QFileInfo(filePath).fileName());
     setWindowTitle(QFileInfo(filePath).fileName());
     killTimer(mCursorTimer);
@@ -114,9 +147,9 @@ void MainWindow::open()
     QFileDialog fileDialog;
     fileDialog.setAcceptMode(QFileDialog::AcceptOpen);
     fileDialog.setWindowTitle(tr("Open a media file"));
-    fileDialog.setNameFilters(QStringList()
-                              << QString::fromLatin1("*")
-                              << Mpv::video_filetypes);
+    fileDialog.setMimeTypeFilters(QStringList()
+                                  << QString::fromLatin1("application/octet-stream")
+                                  << Common::supportedMimeTypes());
     //fileDialog.setDirectory(QFileInfo(Config::instance().lastFile()).absoluteDir());
     if (fileDialog.exec() == QDialog::Accepted)
     {
@@ -156,11 +189,33 @@ void MainWindow::stop()
     showWindowHeader();
     mpvHandler->Stop();
     isPlaying = false;
+    if (mpThumbnailToolBar)
+    {
+        mpPlayToolButton->setToolTip(tr("Play"));
+        mpPlayToolButton->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
+    }
+    if (mpTaskbarButton)
+    {
+        mpTaskbarButton->clearOverlayIcon();
+        mpTaskbarProgress->reset();
+        mpTaskbarProgress->hide();
+    }
 }
 
 void MainWindow::pause()
 {
     mpvHandler->Pause();
+    if (mpThumbnailToolBar)
+    {
+        mpPlayToolButton->setToolTip(tr("Play"));
+        mpPlayToolButton->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
+    }
+    if (mpTaskbarButton)
+    {
+        mpTaskbarButton->setOverlayIcon(style()->standardIcon(QStyle::SP_MediaPause));
+        mpTaskbarProgress->show();
+        mpTaskbarProgress->pause();
+    }
 }
 
 void MainWindow::togglePlayPause()
@@ -168,11 +223,11 @@ void MainWindow::togglePlayPause()
     if (isPlaying)
     {
         mpvHandler->ShowText(tr("Pause"));
-        mpvHandler->Pause();
+        pause();
     }
     else
     {
-        mpvHandler->Play();
+        play();
         mpvHandler->ShowText(tr("Play"));
     }
     isPlaying = !isPlaying;
@@ -310,6 +365,47 @@ void MainWindow::autoLoadExternalSubtitleFile(const QString &filePath)
     }
 }
 
+void MainWindow::createJumpList()
+{
+    QWinJumpList *jumplist = new QWinJumpList(this);
+    jumplist->recent()->setVisible(true);
+}
+
+void MainWindow::createTaskbar()
+{
+    mpTaskbarButton = new QWinTaskbarButton(this);
+    mpTaskbarButton->setWindow(windowHandle());
+    mpTaskbarProgress = mpTaskbarButton->progress();
+}
+
+void MainWindow::createThumbnailToolBar()
+{
+    mpThumbnailToolBar = new QWinThumbnailToolBar(this);
+    mpThumbnailToolBar->setWindow(windowHandle());
+
+    mpPlayToolButton = new QWinThumbnailToolButton(mpThumbnailToolBar);
+    mpPlayToolButton->setEnabled(true);
+    mpPlayToolButton->setToolTip(tr("Play"));
+    mpPlayToolButton->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
+    connect(mpPlayToolButton, SIGNAL(clicked()), this, SLOT(togglePlayPause()));
+
+    mpStopToolButton = new QWinThumbnailToolButton(mpThumbnailToolBar);
+    mpStopToolButton->setEnabled(true);
+    mpStopToolButton->setToolTip(tr("Stop"));
+    mpStopToolButton->setIcon(style()->standardIcon(QStyle::SP_MediaStop));
+    connect(mpStopToolButton, SIGNAL(clicked()), this, SLOT(stop()));
+
+    mpMuteToolButton = new QWinThumbnailToolButton(mpThumbnailToolBar);
+    mpMuteToolButton->setEnabled(true);
+    mpMuteToolButton->setToolTip(tr("Mute"));
+    mpMuteToolButton->setIcon(style()->standardIcon(QStyle::SP_MediaVolume));
+    connect(mpMuteToolButton, SIGNAL(clicked()), this, SLOT(toggleMuteState()));
+
+    mpThumbnailToolBar->addButton(mpStopToolButton);
+    mpThumbnailToolBar->addButton(mpPlayToolButton);
+    mpThumbnailToolBar->addButton(mpMuteToolButton);
+}
+
 //单击Logo图标，弹出菜单
 void MainWindow::Slot_LogoClicked()
 {
@@ -392,16 +488,9 @@ static bool canHandleDrop(const QDragEnterEvent *event)
     {
         return false;
     }
-    QString filePath = urls.constFirst().toLocalFile();
-    QString mSuffix = QString("*.") + QFileInfo(filePath).suffix();
-    if (Mpv::media_filetypes.contains(mSuffix))
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    QMimeDatabase mimeDatabase;
+    return Common::supportedMimeTypes().
+        contains(mimeDatabase.mimeTypeForUrl(urls.constFirst()).name());
 }
 
 void MainWindow::dragEnterEvent(QDragEnterEvent *event)
@@ -446,6 +535,22 @@ void MainWindow::toggleFullscreen()
 
 void MainWindow::toggleMuteState()
 {
+    if (!mpvHandler->getMute())
+    {
+        if (mpThumbnailToolBar)
+        {
+            mpMuteToolButton->setToolTip(tr("Sound"));
+            mpMuteToolButton->setIcon(style()->standardIcon(QStyle::SP_MediaVolumeMuted));
+        }
+    }
+    else
+    {
+        if (mpThumbnailToolBar)
+        {
+            mpMuteToolButton->setToolTip(tr("Mute"));
+            mpMuteToolButton->setIcon(style()->standardIcon(QStyle::SP_MediaVolume));
+        }
+    }
     mpvHandler->Mute(!mpvHandler->getMute());
 }
 
@@ -533,12 +638,21 @@ void MainWindow::decreaseVolume()
 void MainWindow::setProgressBarPos(int pos)
 {
     m_pProgressBar->setValue(pos);
+    if (mpTaskbarButton)
+    {
+        mpTaskbarProgress->setValue(pos);
+    }
 }
 
 void MainWindow::setProgressBarRange(int duration)
 {
     m_pProgressBar->setMinimum(0);
     m_pProgressBar->setMaximum(duration);
+    if (mpTaskbarButton)
+    {
+        mpTaskbarProgress->setMinimum(0);
+        mpTaskbarProgress->setMaximum(duration);
+    }
 }
 
 void MainWindow::showNormalProgressBar()

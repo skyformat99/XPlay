@@ -25,8 +25,14 @@ DEPENDPATH += \
 PRECOMPILED_HEADER = $$PWD/PCH.h
 
 LIBS += \
+    -lUser32 \
+    -lShell32 \
     -L$$PWD/lib\
     -lmpv
+
+CONFIG += \
+    C++11 \
+    C++14
 
 DESTDIR = bin
 
@@ -56,7 +62,8 @@ HEADERS += \
     $$PWD/MpvHandler.h \
     $$PWD/mpvtypes.h \
     $$PWD/recent.h \
-    $$PWD/util.h
+    $$PWD/util.h \
+    $$PWD/Common/Common.h
 
 SOURCES += \
     $$PWD/main.cpp\
@@ -70,12 +77,17 @@ SOURCES += \
     $$PWD/StandardDialog/StandardBottom.cpp \
     $$PWD/Control/SProgressBar.cpp \
     $$PWD/MpvHandler.cpp \
-    $$PWD/util.cpp
+    $$PWD/util.cpp \
+    $$PWD/Common/Common.cpp
 
 RESOURCES += \
     $$PWD/Resources/Icon/Icon.qrc \
     $$PWD/Resources/Image/Image.qrc \
-    $$PWD/Resources/QSS/QSS.qrc
+    $$PWD/Resources/QSS/QSS.qrc \
+    $$PWD/Resources/i18n/i18n.qrc
+
+TRANSLATIONS += \
+    $$PWD/Resources/i18n/XPlay_zh_CN.ts
 
 RC_ICONS = $$PWD/Resources/Icon/XPlay.ico
 
@@ -85,7 +97,7 @@ VERSION = 1.0.0.0
 
 QMAKE_TARGET_COMPANY = "wangwenx190"
 
-QMAKE_TARGET_DESCRIPTION = "XPlay"
+QMAKE_TARGET_DESCRIPTION = "XPlay - Enjoy geek life"
 
 QMAKE_TARGET_COPYRIGHT = "Copyright (C) 2017 by wangwenx190. All rights reserved."
 
