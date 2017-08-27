@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/Image">
+        <file>IconButton.png</file>
+        <file>CloseButton.png</file>
+        <file>MaximizeButton.png</file>
+        <file>MinimizeButton.png</file>
+        <file>RestoreButton.png</file>
+    </qresource>
+</RCC>
