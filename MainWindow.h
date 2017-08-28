@@ -61,6 +61,8 @@ private slots:
     void changeWindowSizeToVideoSize(int w, int h);
     void forceUpdateWindow();
     void loadExternalSubtitleFile(const QString &fileName);
+    void saveVideoCaptureImage();
+    void changeFileAssoc();
 
 protected slots:
     void Slot_LogoClicked();
@@ -72,6 +74,8 @@ protected:
     void wheelEvent(QWheelEvent *event);
     void dragEnterEvent(QDragEnterEvent *event);
     void dropEvent(QDropEvent *event);
+    void changeEvent(QEvent *event);
+    void closeEvent(QCloseEvent *event);
 
     //控件成员
 private:

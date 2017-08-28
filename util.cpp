@@ -10,6 +10,8 @@
 #include <QApplication>
 #include <QRegExp>
 #include <QProcess>
+#include <QCoreApplication>
+#include <QStandardPaths>
 
 #include <windows.h>
 
@@ -27,8 +29,7 @@ void SetAlwaysOnTop(WId wid, bool ontop)
 
 QString SettingsLocation()
 {
-    // saves to $(application directory)\${SETTINGS_FILE}.ini
-    return QString("%0\\%1.ini").arg(QApplication::applicationDirPath(), QString::fromLatin1(AppName));
+    return QString("%0\\%1.ini").arg(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation), QCoreApplication::applicationName());
 }
 
 bool IsValidFile(QString path)

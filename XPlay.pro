@@ -67,7 +67,8 @@ HEADERS += \
     $$PWD/mpvtypes.h \
     $$PWD/recent.h \
     $$PWD/util.h \
-    $$PWD/Common/Common.h
+    $$PWD/Common/Common.h \
+    $$PWD/SettingsManager.h
 
 SOURCES += \
     $$PWD/main.cpp\
@@ -82,7 +83,8 @@ SOURCES += \
     $$PWD/Control/SProgressBar.cpp \
     $$PWD/MpvHandler.cpp \
     $$PWD/util.cpp \
-    $$PWD/Common/Common.cpp
+    $$PWD/Common/Common.cpp \
+    $$PWD/SettingsManager.cpp
 
 RESOURCES += \
     $$PWD/Resources/Icon/Icon.qrc \

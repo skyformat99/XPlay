@@ -4,69 +4,101 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../../MainWindow.cpp" line="123"/>
-        <location filename="../../MainWindow.cpp" line="223"/>
+        <location filename="../../MainWindow.cpp" line="133"/>
+        <location filename="../../MainWindow.cpp" line="241"/>
         <source>Pause</source>
         <translation>暂停</translation>
     </message>
     <message>
-        <location filename="../../MainWindow.cpp" line="147"/>
+        <location filename="../../MainWindow.cpp" line="162"/>
         <source>Open a media file</source>
         <translation>打开一个媒体文件</translation>
     </message>
     <message>
-        <location filename="../../MainWindow.cpp" line="168"/>
+        <location filename="../../MainWindow.cpp" line="183"/>
         <source>Open an URL</source>
         <translation>打开一个URL</translation>
     </message>
     <message>
-        <location filename="../../MainWindow.cpp" line="192"/>
-        <location filename="../../MainWindow.cpp" line="208"/>
-        <location filename="../../MainWindow.cpp" line="229"/>
-        <location filename="../../MainWindow.cpp" line="386"/>
+        <location filename="../../MainWindow.cpp" line="210"/>
+        <location filename="../../MainWindow.cpp" line="226"/>
+        <location filename="../../MainWindow.cpp" line="247"/>
+        <location filename="../../MainWindow.cpp" line="410"/>
         <source>Play</source>
         <translation>播放</translation>
     </message>
     <message>
-        <location filename="../../MainWindow.cpp" line="238"/>
+        <location filename="../../MainWindow.cpp" line="256"/>
         <source>Open file</source>
         <translation>打开文件</translation>
     </message>
     <message>
-        <location filename="../../MainWindow.cpp" line="240"/>
+        <location filename="../../MainWindow.cpp" line="258"/>
         <source>Open URL</source>
         <translation>打开URL</translation>
     </message>
     <message>
-        <location filename="../../MainWindow.cpp" line="243"/>
+        <location filename="../../MainWindow.cpp" line="261"/>
+        <source>Change file associations</source>
+        <translation>更改文件关联</translation>
+    </message>
+    <message>
+        <location filename="../../MainWindow.cpp" line="264"/>
         <source>Help</source>
         <translation>帮助</translation>
     </message>
     <message>
-        <location filename="../../MainWindow.cpp" line="245"/>
+        <location filename="../../MainWindow.cpp" line="266"/>
         <source>About</source>
         <translation>关于</translation>
     </message>
     <message>
-        <location filename="../../MainWindow.cpp" line="248"/>
+        <location filename="../../MainWindow.cpp" line="269"/>
         <source>Exit</source>
         <translation>退出</translation>
     </message>
     <message>
-        <location filename="../../MainWindow.cpp" line="392"/>
+        <location filename="../../MainWindow.cpp" line="416"/>
         <source>Stop</source>
         <translation>停止</translation>
     </message>
     <message>
-        <location filename="../../MainWindow.cpp" line="398"/>
-        <location filename="../../MainWindow.cpp" line="555"/>
+        <location filename="../../MainWindow.cpp" line="422"/>
+        <location filename="../../MainWindow.cpp" line="588"/>
+        <location filename="../../MainWindow.cpp" line="600"/>
         <source>Mute</source>
         <translation>静音</translation>
     </message>
     <message>
-        <location filename="../../MainWindow.cpp" line="547"/>
+        <location filename="../../MainWindow.cpp" line="591"/>
+        <location filename="../../MainWindow.cpp" line="597"/>
         <source>Sound</source>
         <translation>取消静音</translation>
+    </message>
+    <message>
+        <location filename="../../MainWindow.cpp" line="862"/>
+        <source>Click &lt;Yes&gt; to associate video files, &lt;No&gt; to unassociate.</source>
+        <translation>点击&lt;是&gt;关联视频文件，&lt;否&gt;取消关联。</translation>
+    </message>
+    <message>
+        <location filename="../../MainWindow.cpp" line="871"/>
+        <source>Association finished</source>
+        <translation>关联完成</translation>
+    </message>
+    <message>
+        <location filename="../../MainWindow.cpp" line="872"/>
+        <source>Video files have been associated.</source>
+        <translation>已经关联视频文件。</translation>
+    </message>
+    <message>
+        <location filename="../../MainWindow.cpp" line="881"/>
+        <source>Unassociation finished</source>
+        <translation>取消关联完成</translation>
+    </message>
+    <message>
+        <location filename="../../MainWindow.cpp" line="882"/>
+        <source>File associations have been removed.</source>
+        <translation>已经取消视频文件关联。</translation>
     </message>
 </context>
 <context>
@@ -184,12 +216,12 @@
         <translation>正在缓冲</translation>
     </message>
     <message>
-        <location filename="../../MpvHandler.cpp" line="907"/>
+        <location filename="../../MpvHandler.cpp" line="903"/>
         <source>Your network is slow or stuck, please wait a bit</source>
         <translation>网络环境较差，请稍候</translation>
     </message>
     <message>
-        <location filename="../../MpvHandler.cpp" line="957"/>
+        <location filename="../../MpvHandler.cpp" line="949"/>
         <source>File couldn&apos;t be opened</source>
         <translation>无法打开文件</translation>
     </message>

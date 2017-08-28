@@ -892,10 +892,6 @@ void MpvHandler::handle_mpv_event(mpv_event *event)
                 {
                     ShowText(tr("Buffering"));
                 }
-                else
-                {
-                    ShowText(QString());
-                }
             }
         }
         else if(QString(prop->name) == "paused-for-cache")
@@ -905,10 +901,6 @@ void MpvHandler::handle_mpv_event(mpv_event *event)
                 if((bool)*(unsigned*)prop->data && playState == Mpv::Playing)
                 {
                     ShowText(tr("Your network is slow or stuck, please wait a bit"));
-                }
-                else
-                {
-                    ShowText(QString());
                 }
             }
         }

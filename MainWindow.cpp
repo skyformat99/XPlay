@@ -14,8 +14,10 @@
 #include <QPalette>
 #include <QFileInfo>
 #include <QtWinExtras>
+#include <QDesktopServices>
 #include "util.h"
 #include "Common/Common.h"
+#include "SettingsManager.h"
 
 static bool isPlaying = false;
 static int thinProgressBar = 5;
@@ -98,6 +100,12 @@ MainWindow::MainWindow(QWidget *parent) : StandardDialog(parent)
         QtWin::disableBlurBehindWindow(this);
     }
 
+    mpvHandler->Volume(SettingsManager::Instance()->getVolume());
+    if (SettingsManager::Instance()->getMute())
+    {
+        toggleMuteState();
+    }
+
     QTimer::singleShot(50, this, SLOT(forceUpdateWindow()));
 }
 
@@ -129,6 +137,7 @@ void MainWindow::play()
 
 void MainWindow::play(const QString &filePath)
 {
+    SettingsManager::Instance()->setFileDir(QFileInfo(filePath).absolutePath());
     mpvHandler->LoadFile(filePath);
     if (QFileInfo(filePath).exists() && QFileInfo(filePath).isFile())
     {
@@ -137,7 +146,11 @@ void MainWindow::play(const QString &filePath)
     play();
     GetHeader()->SetTitleText(QFileInfo(filePath).fileName());
     setWindowTitle(QFileInfo(filePath).fileName());
-    killTimer(mCursorTimer);
+    if (mCursorTimer)
+    {
+        killTimer(mCursorTimer);
+        mCursorTimer = 0;
+    }
     mCursorTimer = startTimer(3000);
     isPlaying = true;
 }
@@ -150,7 +163,7 @@ void MainWindow::open()
     fileDialog.setMimeTypeFilters(QStringList()
                                   << QString::fromLatin1("application/octet-stream")
                                   << Common::supportedMimeTypes());
-    //fileDialog.setDirectory(QFileInfo(Config::instance().lastFile()).absoluteDir());
+    fileDialog.setDirectory(SettingsManager::Instance()->getFileDir());
     if (fileDialog.exec() == QDialog::Accepted)
     {
         QString file = fileDialog.selectedUrls().constFirst().toLocalFile();
@@ -182,8 +195,11 @@ void MainWindow::stop()
     {
         toggleFullscreen();
     }
-    killTimer(mCursorTimer);
-    mCursorTimer = 0;
+    if (mCursorTimer)
+    {
+        killTimer(mCursorTimer);
+        mCursorTimer = 0;
+    }
     unsetCursor();
     showThinProgressBar();
     showWindowHeader();
@@ -242,6 +258,9 @@ void MainWindow::CreateMainMenu()
     QAction *openURLAct = m_pMainMenu->addAction(tr("Open URL"));
     connect(openURLAct, SIGNAL(triggered()), this, SLOT(openURL()));
     m_pMainMenu->addSeparator();
+    QAction *assocAct = m_pMainMenu->addAction(tr("Change file associations"));
+    connect(assocAct, SIGNAL(triggered()), this, SLOT(changeFileAssoc()));
+    m_pMainMenu->addSeparator();
     QAction *helpAct = m_pMainMenu->addAction(tr("Help"));
     connect(helpAct, SIGNAL(triggered()), this, SLOT(help()));
     QAction *aboutAct = m_pMainMenu->addAction(tr("About"));
@@ -261,6 +280,9 @@ void MainWindow::createShortcuts()
 
     QShortcut *openShortcut = new QShortcut(QKeySequence::Open, this);
     connect(openShortcut, SIGNAL(activated()), this, SLOT(open()));
+
+    QShortcut *captureShortcut = new QShortcut(QKeySequence::Save, this);
+    connect(captureShortcut, SIGNAL(activated()), this, SLOT(saveVideoCaptureImage()));
 
     QShortcut *togglePlayPauseShortcut = new QShortcut(Qt::Key_Space, this);
     connect(togglePlayPauseShortcut, SIGNAL(activated()), this, SLOT(togglePlayPause()));
@@ -506,6 +528,31 @@ void MainWindow::dropEvent(QDropEvent *event)
     StandardDialog::dropEvent(event);
 }
 
+void MainWindow::changeEvent(QEvent *event)
+{
+    if (event->type() != QEvent::WindowStateChange)
+    {
+        StandardDialog::changeEvent(event);
+        return;
+    }
+    if (!isPlaying)
+    {
+        StandardDialog::changeEvent(event);
+        return;
+    }
+    if (windowState() == Qt::WindowMinimized)
+    {
+        togglePlayPause();
+    }
+    StandardDialog::changeEvent(event);
+}
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    SettingsManager::Instance()->save();
+    StandardDialog::closeEvent(event);
+}
+
 void MainWindow::help()
 {
 
@@ -535,8 +582,10 @@ void MainWindow::toggleFullscreen()
 
 void MainWindow::toggleMuteState()
 {
+    SettingsManager::Instance()->setMute(!mpvHandler->getMute());
     if (!mpvHandler->getMute())
     {
+        mpvHandler->ShowText(tr("Mute"));
         if (mpThumbnailToolBar)
         {
             mpMuteToolButton->setToolTip(tr("Sound"));
@@ -545,6 +594,7 @@ void MainWindow::toggleMuteState()
     }
     else
     {
+        mpvHandler->ShowText(tr("Sound"));
         if (mpThumbnailToolBar)
         {
             mpMuteToolButton->setToolTip(tr("Mute"));
@@ -622,6 +672,7 @@ void MainWindow::increaseVolume()
     {
         vol = 100;
     }
+    SettingsManager::Instance()->setVolume(vol);
     mpvHandler->Volume(vol, true);
 }
 
@@ -632,6 +683,7 @@ void MainWindow::decreaseVolume()
     {
         vol = 0;
     }
+    SettingsManager::Instance()->setVolume(vol);
     mpvHandler->Volume(vol, true);
 }
 
@@ -787,5 +839,46 @@ void MainWindow::loadExternalSubtitleFile(const QString &fileName)
                  << fileName.toUtf8().constData()
                  << QString::fromLatin1("\" loaded.");
         mpvHandler->AddSubtitleTrack(fileName);
+    }
+}
+
+void MainWindow::saveVideoCaptureImage()
+{
+    if (isPlaying)
+    {
+        togglePlayPause();
+    }
+    mpvHandler->ScreenshotFormat(QString::fromLatin1("png"));
+    mpvHandler->ScreenshotDirectory(SettingsManager::Instance()->getCaptureDir());
+    mpvHandler->Screenshot();
+    QDesktopServices::openUrl(QUrl(QString::fromLatin1("file:///")
+                                   + SettingsManager::Instance()->getCaptureDir(), QUrl::TolerantMode));
+}
+
+void MainWindow::changeFileAssoc()
+{
+    QMessageBox msgBox;
+    msgBox.setIcon(QMessageBox::Question);
+    msgBox.setText(tr("Click <Yes> to associate video files, <No> to unassociate."));
+    msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+    if (msgBox.exec() == QDialog::Accepted)
+    {
+        if (!Common::isFileTypesAssociated())
+        {
+            Common::associateFileTypes();
+        }
+        QMessageBox::information(nullptr
+                                 , tr("Association finished")
+                                 , tr("Video files have been associated."));
+    }
+    else
+    {
+        if (Common::isFileTypesAssociated())
+        {
+            Common::unassociateFileTypes();
+        }
+        QMessageBox::information(nullptr
+                                 , tr("Unassociation finished")
+                                 , tr("File associations have been removed."));
     }
 }
