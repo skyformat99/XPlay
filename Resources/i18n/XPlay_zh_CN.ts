@@ -44,11 +44,13 @@
     </message>
     <message>
         <location filename="../../MainWindow.cpp" line="264"/>
+        <location filename="../../MainWindow.cpp" line="576"/>
         <source>Help</source>
         <translation>帮助</translation>
     </message>
     <message>
         <location filename="../../MainWindow.cpp" line="266"/>
+        <location filename="../../MainWindow.cpp" line="587"/>
         <source>About</source>
         <translation>关于</translation>
     </message>
@@ -64,41 +66,147 @@
     </message>
     <message>
         <location filename="../../MainWindow.cpp" line="422"/>
-        <location filename="../../MainWindow.cpp" line="588"/>
-        <location filename="../../MainWindow.cpp" line="600"/>
+        <location filename="../../MainWindow.cpp" line="612"/>
+        <location filename="../../MainWindow.cpp" line="624"/>
         <source>Mute</source>
         <translation>静音</translation>
     </message>
     <message>
-        <location filename="../../MainWindow.cpp" line="591"/>
-        <location filename="../../MainWindow.cpp" line="597"/>
+        <location filename="../../MainWindow.cpp" line="563"/>
+        <source>Shortcuts</source>
+        <translation>快捷键</translation>
+    </message>
+    <message>
+        <location filename="../../MainWindow.cpp" line="564"/>
+        <source>Switch fullscreen/normal window : Enter / Return / F11</source>
+        <translation>切换全屏/正常窗口：回车/F11</translation>
+    </message>
+    <message>
+        <location filename="../../MainWindow.cpp" line="565"/>
+        <source>Open file : Ctrl + O</source>
+        <translation>打开文件：Ctrl + O</translation>
+    </message>
+    <message>
+        <location filename="../../MainWindow.cpp" line="566"/>
+        <source>Play/Pause : Space</source>
+        <translation>播放/暂停：空格键</translation>
+    </message>
+    <message>
+        <location filename="../../MainWindow.cpp" line="567"/>
+        <source>Quit player/Stop/Exit fullscreen : Esc</source>
+        <translation>退出播放器/停止播放/退出全屏：Esc</translation>
+    </message>
+    <message>
+        <location filename="../../MainWindow.cpp" line="568"/>
+        <source>Mute/Sound : M</source>
+        <translation>静音/取消静音：M</translation>
+    </message>
+    <message>
+        <location filename="../../MainWindow.cpp" line="569"/>
+        <source>Volume +/- : Up / Down / Mouse Wheel</source>
+        <translation>音量 +/-：⬆/⬇/鼠标滚轮</translation>
+    </message>
+    <message>
+        <location filename="../../MainWindow.cpp" line="570"/>
+        <source>Seek forward/backward : ➡ / ⬅</source>
+        <translation>前进/后退：➡/⬅</translation>
+    </message>
+    <message>
+        <source>Seek forward/backward : -&amp;gt; / &amp;lt;-</source>
+        <translation type="vanished">前进/后退：-&amp;gt; / &amp;lt;-</translation>
+    </message>
+    <message>
+        <location filename="../../MainWindow.cpp" line="571"/>
+        <source>Seek next/previous chapter : Page Down / Page Up</source>
+        <translation>跳转到下一/上一章节：向下翻页/向上翻页</translation>
+    </message>
+    <message>
+        <location filename="../../MainWindow.cpp" line="572"/>
+        <source>Snapshot : Ctrl + S</source>
+        <translation>截图：Ctrl + S</translation>
+    </message>
+    <message>
+        <location filename="../../MainWindow.cpp" line="573"/>
+        <source>Help : F1</source>
+        <translation>帮助：F1</translation>
+    </message>
+    <message>
+        <location filename="../../MainWindow.cpp" line="574"/>
+        <source>Drag video file to the play area can also open it</source>
+        <translation>拖拽视频文件到播放器显示区域也可以播放该文件</translation>
+    </message>
+    <message>
+        <location filename="../../MainWindow.cpp" line="575"/>
+        <source>More information : </source>
+        <translation>更多信息请查看 Wiki： </translation>
+    </message>
+    <message>
+        <location filename="../../MainWindow.cpp" line="584"/>
+        <source>Version</source>
+        <translation>版本</translation>
+    </message>
+    <message>
+        <location filename="../../MainWindow.cpp" line="585"/>
+        <source>Publisher</source>
+        <translation>开发者</translation>
+    </message>
+    <message>
+        <location filename="../../MainWindow.cpp" line="586"/>
+        <source>Website</source>
+        <translation>官方网站</translation>
+    </message>
+    <message>
+        <location filename="../../MainWindow.cpp" line="615"/>
+        <location filename="../../MainWindow.cpp" line="621"/>
         <source>Sound</source>
         <translation>取消静音</translation>
     </message>
     <message>
-        <location filename="../../MainWindow.cpp" line="862"/>
+        <location filename="../../MainWindow.cpp" line="886"/>
         <source>Click &lt;Yes&gt; to associate video files, &lt;No&gt; to unassociate.</source>
         <translation>点击&lt;是&gt;关联视频文件，&lt;否&gt;取消关联。</translation>
     </message>
     <message>
-        <location filename="../../MainWindow.cpp" line="871"/>
+        <location filename="../../MainWindow.cpp" line="895"/>
+        <location filename="../../MainWindow.cpp" line="907"/>
         <source>Association finished</source>
         <translation>关联完成</translation>
     </message>
     <message>
-        <location filename="../../MainWindow.cpp" line="872"/>
+        <location filename="../../MainWindow.cpp" line="896"/>
         <source>Video files have been associated.</source>
         <translation>已经关联视频文件。</translation>
     </message>
     <message>
-        <location filename="../../MainWindow.cpp" line="881"/>
+        <location filename="../../MainWindow.cpp" line="900"/>
+        <source>Error</source>
+        <translation>错误</translation>
+    </message>
+    <message>
+        <location filename="../../MainWindow.cpp" line="901"/>
+        <source>Cannot associate file types.</source>
+        <translation>无法关联视频文件。</translation>
+    </message>
+    <message>
+        <location filename="../../MainWindow.cpp" line="908"/>
+        <source>Video files have already been associated.</source>
+        <translation>视频文件已经被关联了，不需要再次关联。</translation>
+    </message>
+    <message>
+        <location filename="../../MainWindow.cpp" line="917"/>
+        <location filename="../../MainWindow.cpp" line="923"/>
         <source>Unassociation finished</source>
         <translation>取消关联完成</translation>
     </message>
     <message>
-        <location filename="../../MainWindow.cpp" line="882"/>
+        <location filename="../../MainWindow.cpp" line="918"/>
         <source>File associations have been removed.</source>
         <translation>已经取消视频文件关联。</translation>
+    </message>
+    <message>
+        <location filename="../../MainWindow.cpp" line="924"/>
+        <source>File associations have already been removed.</source>
+        <translation>文件关联已经被移除，不需要再次移除。</translation>
     </message>
 </context>
 <context>
@@ -224,6 +332,19 @@
         <location filename="../../MpvHandler.cpp" line="949"/>
         <source>File couldn&apos;t be opened</source>
         <translation>无法打开文件</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <location filename="../../main.cpp" line="60"/>
+        <source>Error</source>
+        <translation>错误</translation>
+    </message>
+    <message>
+        <location filename="../../main.cpp" line="61"/>
+        <source>Cannot associate file types.</source>
+        <translation>无法关联视频文件。</translation>
     </message>
 </context>
 </TS>

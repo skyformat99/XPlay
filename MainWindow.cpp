@@ -555,12 +555,36 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::help()
 {
-
+    QString helpText =
+                QString::fromLatin1("<h4>%1</h4><ul><li>%2</li><li>%3</li><li>%4</li>"
+                "<li>%5</li><li>%6</li><li>%7</li><li>%8</li><li>%9</li><li>%10</li>"
+                "<li>%11</li><li>%12</li></ul>"
+                "<p>%13<a href='" AppWikiURL "'>" AppWikiURL "</a><p>"
+               ).arg(tr("Shortcuts"))
+                .arg(tr("Switch fullscreen/normal window : Enter / Return / F11"))
+                .arg(tr("Open file : Ctrl + O"))
+                .arg(tr("Play/Pause : Space"))
+                .arg(tr("Quit player/Stop/Exit fullscreen : Esc"))
+                .arg(tr("Mute/Sound : M"))
+                .arg(tr("Volume +/- : Up / Down / Mouse Wheel"))
+                .arg(tr("Seek forward/backward : ➡ / ⬅"))
+                .arg(tr("Seek next/previous chapter : Page Down / Page Up"))
+                .arg(tr("Snapshot : Ctrl + S"))
+                .arg(tr("Help : F1"))
+                .arg(tr("Drag video file to the play area can also open it"))
+                .arg(tr("More information : "));
+    QMessageBox::information(nullptr, tr("Help"), helpText);
 }
 
 void MainWindow::about()
 {
-
+    QString aboutText = QString::fromLatin1("<p>%1 : " AppVersion "</p>\n"
+                                            "<p>%2 : " AppPublisher "</p>\n"
+                                            "<p>%3 : " AppPublisherURL "</p>\n"
+                                            ).arg(tr("Version"))
+                                             .arg(tr("Publisher"))
+                                             .arg(tr("Website"));
+    QMessageBox::about(nullptr, tr("About"), aboutText);
 }
 
 void MainWindow::toggleFullscreen()
@@ -865,20 +889,39 @@ void MainWindow::changeFileAssoc()
     {
         if (!Common::isFileTypesAssociated())
         {
-            Common::associateFileTypes();
+            if (Common::associateFileTypes())
+            {
+                QMessageBox::information(nullptr
+                                         , tr("Association finished")
+                                         , tr("Video files have been associated."));
+            }
+            else
+            {
+                QMessageBox::critical(nullptr, tr("Error")
+                                      , tr("Cannot associate file types."));
+            }
         }
-        QMessageBox::information(nullptr
-                                 , tr("Association finished")
-                                 , tr("Video files have been associated."));
+        else
+        {
+            QMessageBox::information(nullptr
+                                     , tr("Association finished")
+                                     , tr("Video files have already been associated."));
+        }
     }
     else
     {
         if (Common::isFileTypesAssociated())
         {
             Common::unassociateFileTypes();
+            QMessageBox::information(nullptr
+                                     , tr("Unassociation finished")
+                                     , tr("File associations have been removed."));
         }
-        QMessageBox::information(nullptr
-                                 , tr("Unassociation finished")
-                                 , tr("File associations have been removed."));
+        else
+        {
+            QMessageBox::information(nullptr
+                                     , tr("Unassociation finished")
+                                     , tr("File associations have already been removed."));
+        }
     }
 }

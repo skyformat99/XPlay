@@ -3,6 +3,7 @@
 #include <QFileInfo>
 #include <QCoreApplication>
 #include <QDir>
+#include <QMessageBox>
 #include <clocale>
 #include "MainWindow.h"
 #include "Style/SStyle.h"
@@ -52,6 +53,41 @@ int main(int argc, char *argv[])
 
     Common::load_qm();
 
+    if (app.arguments().contains(QString::fromLatin1("--assoc"), Qt::CaseInsensitive))
+    {
+        if (!Common::associateFileTypes())
+        {
+            QMessageBox::critical(nullptr, QObject::tr("Error")
+                                  , QObject::tr("Cannot associate file types."));
+            return -1;
+        }
+        return 0;
+    }
+    else if (app.arguments().contains(QString::fromLatin1("--unassoc")
+                                      , Qt::CaseInsensitive))
+    {
+        Common::unassociateFileTypes();
+        return 0;
+    }
+
+    HANDLE m_hAppMutex;
+    int m_iMutexCreateState;
+    Common::createMutex(&m_hAppMutex, &m_iMutexCreateState);
+    if (m_iMutexCreateState == -1)
+    {
+        //程序已经运行
+        //return 0;
+    }
+    else if (m_iMutexCreateState == -2)
+    {
+        //创建Mutex失败
+        return -1;
+    }
+    else
+    {
+        //Mutex成功创建
+    }
+
     //显示主界面;
     MainWindow window;
     WindowManager::Instance()->SetMainWindow(&window);
@@ -70,5 +106,12 @@ int main(int argc, char *argv[])
         }
     }
 
-    return app.exec();
+    int ret = app.exec();
+
+    if (m_iMutexCreateState != -2)
+    {
+        CloseHandle(m_hAppMutex);
+    }
+
+    return ret;
 }
