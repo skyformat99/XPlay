@@ -99,7 +99,7 @@ RC_ICONS = $$PWD/Resources/Icon/XPlay.ico
 
 RC_LANG = 0x0004
 
-VERSION = 1.0.0.0
+VERSION = 1.0.1.0
 
 QMAKE_TARGET_COMPANY = "wangwenx190"
 

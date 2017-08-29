@@ -74,12 +74,12 @@ MainWindow::MainWindow(QWidget *parent) : StandardDialog(parent)
 
     createShortcuts();
 
-    setMinimumSize(500, 400);
+    setMinimumSize(400, 200);
 
     QDesktopWidget desktop;
     thinProgressBar = static_cast<float>(desktop.screenGeometry().height()) * 0.005;
     m_pProgressBar->setFixedHeight(thinProgressBar);
-    resize(1280, GetHeader()->height() + 720 + m_pProgressBar->height());
+    //resize(1280, GetHeader()->height() + 720 + m_pProgressBar->height());
     move((desktop.availableGeometry().width() - width()) / 2
          , (desktop.availableGeometry().height() - height()) / 2);
 
@@ -106,7 +106,7 @@ MainWindow::MainWindow(QWidget *parent) : StandardDialog(parent)
         toggleMuteState();
     }
 
-    QTimer::singleShot(50, this, SLOT(forceUpdateWindow()));
+    //QTimer::singleShot(50, this, SLOT(forceUpdateWindow()));
 }
 
 MainWindow::~MainWindow()
@@ -817,7 +817,7 @@ void MainWindow::changeWindowSizeToVideoSize(int w, int h)
         QDesktopWidget desktop;
         if (h2 >= desktop.availableGeometry().height())
         {
-            int w2 = (static_cast<float>(desktop.availableGeometry().height()) * static_cast<float>(w)) / static_cast<float>(h2);
+            int w2 = (static_cast<float>(desktop.availableGeometry().height()) * static_cast<float>(w)) / static_cast<float>(h2) - 8;
             if (GetHeader()->isVisible())
             {
                 resize(w2, desktop.availableGeometry().height() - 30 + thinProgressBar);

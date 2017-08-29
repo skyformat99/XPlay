@@ -20,7 +20,7 @@
 #define AppID              "{99749D93-6735-4DA1-98CB-458AEE238A69}"
 #define AppName            "XPlay"
 #define AppDisplayName     "XPlay - Enjoy geek life"
-#define AppVersion         "1.0.0.0"
+#define AppVersion         "1.0.1.0"
 #define AppPublisher       "wangwenx190"
 #define AppPublisherURL    "https://gitee.com/wangwenx190/XPlay"
 #define AppReadMeURL       "https://gitee.com/wangwenx190/XPlay/blob/master/README.md"
